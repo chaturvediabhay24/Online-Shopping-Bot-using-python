@@ -13,31 +13,6 @@ import getpass
 usrname=input("enter username: ")
 passwrd=getpass.getpass() 
 
-def image_to_string(src):
-	img = cv2.imread(src,0)
-	    # Convert to gray
-	img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-	    # Apply dilation and erosion to remove some noise
-	kernel = np.ones((1, 1), np.uint8)
-	img = cv2.dilate(img, kernel, iterations=1)
-	img = cv2.erode(img, kernel, iterations=1)
-
-	    # Write image after removed noise
-	cv2.imwrite("removed_noise.png", img)
-
-	    #  Apply threshold to get image with only black and white
-	img = cv2.adaptiveThreshold(img, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 31, 2)
-
-	    # Write the image after apply opencv to do some ...
-	cv2.imwrite("thres.png", img)
-
-	    # Recognize text with tesseract for python
-	result = pytesseract.image_to_string(Image.open("thres.png"))
-	Image.close()
-	return result
-
-
-
 browser=webdriver.Chrome()                            
 browser.get("https://www.flipkart.com")                  #opening website
 
@@ -127,31 +102,6 @@ while(1):
 	except:
 		print ("Retrying !!!")
 
-
-
-while(1): #download captcha
-	try:
-		img = browser.find_element_by_xpath('//*[@id="container"]/div/div[1]/div/div[1]/div[4]/div/div/div[1]/div/label[5]/div[2]/div/div/div/form/div/div[1]/img[1]')
-		src = img.get_attribute('src')
-		break
-	except:
-		print ("Retrying !!!")
-result=""
-while(1):
-	try:
-		result=image_to_string(src);
-		break;
-	except:
-		print("Retrying!!!")
-
-while(1):
-	try:
-		search=browser.find_element_by_xpath(''' //*[@id="container"]/div/div[1]/div/div[1]/div[4]/div/div/div[1]/div/label[5]/div[2]/div/div/div/form/div/div[2]/div/input ''')
-			#write text in it
-		search.send_keys(result)
-		break
-	except:
-		print ("Retrying !!!")
 
 input("press enter to close window")
 browser.close()
